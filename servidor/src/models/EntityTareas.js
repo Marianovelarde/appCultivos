@@ -32,6 +32,12 @@ module.exports = (sequelize) => {
         },
         prioridad: {
             type: DataTypes.ENUM('baja', 'media', 'alta'),
-            defaultValue: 'baja',}
+            defaultValue: 'baja',},
+            idCultivo: {
+                type: DataTypes.INTEGER,
+            },
+            idCultivo: {
+                type: DataTypes.INTEGER,
+            }
     }, {timestamps: true});
 }
