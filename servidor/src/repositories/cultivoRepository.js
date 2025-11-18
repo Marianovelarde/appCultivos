@@ -22,8 +22,19 @@ const getAllCultivosRepository = async () => {
     return cultivos;
 }
 
+const getCultivosByUserRepository = async (idUser) => {
+    const cultivos = await EntityCultivos.findOne({
+        where: { idUser },
+        include: { 
+            model: EntityUsers,
+            attributes: ['idUser', 'usuario', ]
+        }
+    }) 
+    return cultivos;
+}
 
 module.exports = {
     createCultivoRepository,
-    getAllCultivosRepository
+    getAllCultivosRepository,
+    getCultivosByUserRepository
 }

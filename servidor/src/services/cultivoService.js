@@ -1,6 +1,7 @@
 const {
     createCultivoRepository,
-    getAllCultivosRepository
+    getAllCultivosRepository,
+    getCultivosByUserRepository
 } = require('../repositories/cultivoRepository');
 
 
@@ -23,8 +24,22 @@ const getAllCultivosService = async () => {
     return cultivos;
 }
 
+const getCultivosByUserService = async (idUser) => {
+
+    const cultivos = await getCultivosByUserRepository(idUser);
+  try {
+      if(!idUser){
+          throw new Error('ID de usuario no proporcionado');
+      }
+      return cultivos
+  } catch (error) {
+    console.error('Error en getCultivosByUserService:', error);
+  }
+}
+
 
 module.exports = {
 createCultivoService,
-getAllCultivosService
+getAllCultivosService,
+getCultivosByUserService
 }

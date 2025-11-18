@@ -1,4 +1,4 @@
-const { createCultivoService, getAllCultivosService } = require("../services/cultivoService");
+const { createCultivoService, getAllCultivosService, getCultivosByUserService } = require("../services/cultivoService");
 
 const createCultivoController = async (req, res) => {
   try {
@@ -29,7 +29,37 @@ const getAllCultivosControllers = async (req,res) => {
     }
 }
 
+const getCultivosByUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 1️⃣ Validar primero el parámetro
+    if (!id) {
+      return res.status(400).json({ message: 'Debe proporcionar un ID de usuario válido' });
+    }
+
+    // 2️⃣ Obtener los cultivos
+    const cultivos = await getCultivosByUserService(id);
+
+    // 3️⃣ Verificar si no existen resultados
+    if (!cultivos || cultivos.length === 0) {
+      return res.status(404).json({ message: `No se encontraron cultivos para el usuario con ID ${id}` });
+    }
+
+    // 4️⃣ Respuesta exitosa
+    return res.status(200).json(cultivos);
+
+  } catch (error) {
+    console.error('Error en getCultivosByUserController:', error);
+    return res.status(500).json({
+      message: 'Error del servidor al obtener cultivos por usuario',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
     createCultivoController,
-    getAllCultivosControllers
+    getAllCultivosControllers,
+    getCultivosByUserController
 }

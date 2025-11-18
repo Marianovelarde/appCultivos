@@ -5,8 +5,8 @@ const tareasRoutes = require('../routes/tareasRoutes');
 
 const router = express.Router();  
 
-router.use('/', userRoutes)
-router.use('/', cultivoRoutes)
-router.use('/', tareasRoutes)
+router.use('/users', userRoutes)
+router.use('/cultivos', cultivoRoutes)
+router.use('/tareas', tareasRoutes)
 
 module.exports = router;
