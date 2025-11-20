@@ -1,6 +1,8 @@
 const {
     createUserService,
-    getAllUsersRepositoryService} = require('../services/userService');
+    getAllUsersRepositoryService,
+    getUserByIdService
+} = require('../services/userService');
 
 const createUserControllers = async (req, res) => {
     const {usuario, contraseña} = req.body; 
@@ -36,7 +38,29 @@ const getAllUsersControllers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const getUserByIdControllers = async (req,res) => {
+    const {idUser} = req.params;
+    //params: objeto de express que contiene los parámetros de la ruta solicitud HTTP
+    console.log('id en controllers:', idUser);
+    
+
+    try {
+      const user = await getUserByIdService(idUser);
+
+      if(!idUser){
+        return res.status(400).json({message: 'El id del usuario es requerido'});
+      }
+      return res.status(200).json({
+        message: 'Usuario obtenido correctamente',
+        usuario: user
+      });
+    } catch (error) {
+      return res.status(500).json({error: error.message});
+    }
+}
 module.exports = {
     createUserControllers,
-    getAllUsersControllers
+    getAllUsersControllers,
+    getUserByIdControllers
 }

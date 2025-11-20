@@ -1,9 +1,11 @@
 const express = require('express');
 
-const { crateTareaController } = require('../controllers/tareasControllers');
+const { crateTareaController, getAllTareasController, getTareasByIdController } = require('../controllers/tareasControllers');
 
 const router = express.Router();
 
-router.post('/tareas', crateTareaController);
+router.post('/', crateTareaController);
+router.get('/', getAllTareasController);
+router.get('/:idCultivo', getTareasByIdController);
 
 module.exports = router;

@@ -7,6 +7,22 @@ console.log(nombre, descripcion, fechaProgramada, fechaReal, estado, caracter, p
         return newTarea;
     }
 
+    const getAllTareasRepository = async () => {
+        const tareas = await EntityTareas.findAll()
+        return tareas;
+    }
+
+    const getTareasByIdRepository = async (idCultivo) => {
+        const tareas = await EntityTareas.findAll({
+            where: {idCultivo}}
+        )
+        return tareas;
+    }
+
     module.exports = {
-    createTareaRepository
+    createTareaRepository,
+    getAllTareasRepository,
+    getTareasByIdRepository,
+    getTareasByIdRepository
+    
     }

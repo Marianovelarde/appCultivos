@@ -23,6 +23,7 @@ const getAllCultivosRepository = async () => {
 }
 
 const getCultivosByUserRepository = async (idUser) => {
+    
     const cultivos = await EntityCultivos.findOne({
         where: { idUser },
         include: { 

@@ -1,6 +1,7 @@
 const {
     createUserRepository,
-    getAllUsersRepository
+    getAllUsersRepository,
+    getUserByIdRepository
 } = require('../repositories/userRepository');
 
 const createUserService = async (usuario, contraseña) => {
@@ -19,7 +20,16 @@ const getAllUsersRepositoryService = async () => {
 }
 return users;
 }
+
+const getUserByIdService = async (idUser) => {
+    const selectedUser = await getUserByIdRepository(idUser);
+    if(!selectedUser){
+        throw new Error('Usuario no encontrado');
+    }
+    return selectedUser;
+}
 module.exports = {
     createUserService,
-    getAllUsersRepositoryService
+    getAllUsersRepositoryService,
+    getUserByIdService
 }

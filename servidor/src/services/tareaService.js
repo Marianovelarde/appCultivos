@@ -1,4 +1,4 @@
-const {createTareaRepository} = require('../repositories/tareasRepository')
+const {createTareaRepository, getAllTareasRepository, getTareasByIdRepository} = require('../repositories/tareasRepository')
 
 const createTareaService = async ({nombre, descripcion, fechaProgramada, fechaReal, estado, caracter, prioridad, idCultivo}) => {
     
@@ -11,6 +11,24 @@ if(!nuevaTarea){
     return nuevaTarea;
 }
 
+const getAllTareasService = async () => {
+    const tareas = await getAllTareasRepository()
+    if(!tareas){
+        throw new Error('No se pudieron obtener las tareas');
+    }
+    return tareas 
+}
+const getTareasByIdService = async (idCultivo) => {
+    const tareas = await getTareasByIdRepository(idCultivo)
+    if(!tareas){
+        throw new Error('No se pudieron obtener las tareas');
+    }   
+    return tareas 
+}
+
 module.exports = {
-    createTareaService
+    createTareaService,
+    getAllTareasService,
+    getTareasByIdService
+
 }

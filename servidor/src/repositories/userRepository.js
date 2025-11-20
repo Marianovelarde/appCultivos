@@ -12,7 +12,13 @@ const getAllUsersRepository = async () => {
     return users;
 }
 
+const getUserByIdRepository = async (idUser) => {
+    const selectedUser = await EntityUsers.findByPk(idUser);
+    return selectedUser;
+}
+
 module.exports = {
     createUserRepository,
-    getAllUsersRepository
+    getAllUsersRepository,
+    getUserByIdRepository
 }
