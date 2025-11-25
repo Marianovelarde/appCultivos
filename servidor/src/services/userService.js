@@ -1,7 +1,8 @@
 const {
     createUserRepository,
     getAllUsersRepository,
-    getUserByIdRepository
+    getUserByIdRepository,
+    LoginRepository
 } = require('../repositories/userRepository');
 
 const createUserService = async (usuario, contraseña) => {
@@ -28,8 +29,17 @@ const getUserByIdService = async (idUser) => {
     }
     return selectedUser;
 }
+
+const loginService = async (usuario, contraseña) => {
+    const user = await LoginRepository(usuario, contraseña);
+    if(!user){
+        throw new Error('Credenciales inválidas');
+    }  
+    return user 
+}
 module.exports = {
     createUserService,
     getAllUsersRepositoryService,
-    getUserByIdService
+    getUserByIdService,
+    loginService
 }

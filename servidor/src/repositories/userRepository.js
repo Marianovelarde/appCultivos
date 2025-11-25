@@ -17,8 +17,13 @@ const getUserByIdRepository = async (idUser) => {
     return selectedUser;
 }
 
+const LoginRepository = async (usuario, contraseña) => {
+    const user = await EntityUsers.findOne({where: {usuario, contraseña}});
+    return user;
+}
 module.exports = {
     createUserRepository,
     getAllUsersRepository,
-    getUserByIdRepository
+    getUserByIdRepository,
+    LoginRepository
 }

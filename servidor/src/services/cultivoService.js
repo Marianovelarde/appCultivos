@@ -1,7 +1,9 @@
 const {
     createCultivoRepository,
     getAllCultivosRepository,
-    getCultivosByUserRepository
+    getCultivosByUserRepository,
+    deleteCultivoRepository,
+    updateCultivoRepository
 } = require('../repositories/cultivoRepository');
 
 
@@ -37,9 +39,26 @@ const getCultivosByUserService = async (idUser) => {
   }
 }
 
+const deleteCultivoService = async (idCultivo) => {
+    const deleteCultivo = await deleteCultivoRepository(idCultivo);
+    if(!deleteCultivo){
+        throw new Error('No se pudo eliminar el cultivo');
+    }
+    return deleteCultivo
+}
+
+const updateCultivoService = async (idCultivo, updateData) => {
+    const updatedCultivo = await updateCultivoRepository(idCultivo, updateData);
+    if(!updatedCultivo){
+        throw new Error('No se pudo actualizar el cultivo');
+    }
+    return updatedCultivo;
+}
 
 module.exports = {
 createCultivoService,
 getAllCultivosService,
-getCultivosByUserService
+getCultivosByUserService,
+deleteCultivoService,
+updateCultivoService
 }

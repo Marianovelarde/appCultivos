@@ -23,19 +23,29 @@ const getAllCultivosRepository = async () => {
 }
 
 const getCultivosByUserRepository = async (idUser) => {
-    
-    const cultivos = await EntityCultivos.findOne({
+    return await EntityCultivos.findAll({
         where: { idUser },
-        include: { 
-            model: EntityUsers,
-            attributes: ['idUser', 'usuario', ]
-        }
-    }) 
-    return cultivos;
-}
+        attributes: ["idCultivo", "nombre", "fechaDeInicio", "fechadeFinal", "notas"],
+        order: [["fechaDeInicio", "ASC"]],
+    });
+};
 
+const deleteCultivoRepository = async (idCultivo) => {
+    const deleteCultivo = await EntityCultivos.destroy({ where: { idCultivo } });
+    return deleteCultivo;
+
+}
+const updateCultivoRepository = async (idCultivo, updateData) => {
+    const updatedCultivo = await EntityCultivos.update(updateData, {
+        where: { idCultivo },
+
+    });
+    return updatedCultivo;
+}
 module.exports = {
     createCultivoRepository,
     getAllCultivosRepository,
-    getCultivosByUserRepository
+    getCultivosByUserRepository,
+    deleteCultivoRepository,
+    updateCultivoRepository
 }

@@ -1,7 +1,8 @@
 const {
     createUserService,
     getAllUsersRepositoryService,
-    getUserByIdService
+    getUserByIdService,
+    loginService
 } = require('../services/userService');
 
 const createUserControllers = async (req, res) => {
@@ -59,8 +60,29 @@ const getUserByIdControllers = async (req,res) => {
       return res.status(500).json({error: error.message});
     }
 }
+
+const loginControllers = async (req, res) => {
+    const {usuario, contraseña} = req.body;
+    console.log(usuario, contraseña);
+    
+    if(!usuario || !contraseña) 
+      return res.status(400).json({message: 'Usuario y contraseña son requeridos'});
+    if (contraseña !== contraseña)
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    try {
+      const user = await loginService(usuario, contraseña);
+        return res.status(200).json({
+            message: 'Inicio de sesión exitoso',
+            usuario: user
+        });
+    } catch (error) {
+        return res.status(401).json({error: error.message});
+    }
+  }
+
 module.exports = {
     createUserControllers,
     getAllUsersControllers,
-    getUserByIdControllers
+    getUserByIdControllers,
+    loginControllers
 }

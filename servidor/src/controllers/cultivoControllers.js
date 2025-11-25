@@ -1,11 +1,12 @@
-const { createCultivoService, getAllCultivosService, getCultivosByUserService } = require("../services/cultivoService");
+const e = require("express");
+const { createCultivoService, getAllCultivosService, getCultivosByUserService, deleteCultivoService, updateCultivoService } = require("../services/cultivoService");
 
 const createCultivoController = async (req, res) => {
   try {
-    const { nombre, fechaDeInicio, fechaDeFinal, notas, idUser } = req.body;
+    const { nombre, fechaDeInicio, fechadeFinal, notas, idUser } = req.body;
     console.log('controllers:', req.body);
 
-    const nuevoCultivo = await createCultivoService(nombre, fechaDeInicio, fechaDeFinal, notas,  idUser);
+    const nuevoCultivo = await createCultivoService(nombre, fechaDeInicio, fechadeFinal, notas,  idUser);
 
     if (nuevoCultivo) {
       return res.status(201).json(nuevoCultivo);
@@ -28,38 +29,46 @@ const getAllCultivosControllers = async (req,res) => {
         res.status(500).json({message: 'Error del servidor', error: error.message});
     }
 }
-
 const getCultivosByUserController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1️⃣ Validar primero el parámetro
-    if (!id) {
-      return res.status(400).json({ message: 'Debe proporcionar un ID de usuario válido' });
-    }
-
-    // 2️⃣ Obtener los cultivos
     const cultivos = await getCultivosByUserService(id);
 
-    // 3️⃣ Verificar si no existen resultados
-    if (!cultivos || cultivos.length === 0) {
-      return res.status(404).json({ message: `No se encontraron cultivos para el usuario con ID ${id}` });
-    }
-
-    // 4️⃣ Respuesta exitosa
-    return res.status(200).json(cultivos);
-
+    res.json(cultivos);
   } catch (error) {
-    console.error('Error en getCultivosByUserController:', error);
-    return res.status(500).json({
-      message: 'Error del servidor al obtener cultivos por usuario',
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error al obtener los cultivos" });
   }
 };
+
+const deleteCultivoController = async (req, res) => {
+  const { idCultivo } = req.params;
+  try {
+    const deleteCultivo = await deleteCultivoService(idCultivo);
+    if(deleteCultivo) return res.status(200).json({ message: 'Cultivo eliminado correctamente' });
+  }
+  catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el cultivo' });
+}
+}
+
+const updateCultivoController = async (req, res) => {
+    const { idCultivo } = req.params;
+    const updateData = req.body;
+    const updatedCultivo = await updateCultivoService(idCultivo, updateData);
+   try {
+    if(updatedCultivo) return  res.status(200).json({ message: 'Cultivo actualizado correctamente' });
+    else return res.status(400).json({ message: 'No se pudo actualizar el cultivo' });
+   } catch (error) {
+    return res.status(500).json({ message: 'Error del servidor' });
+   }
+  }
 
 module.exports = {
     createCultivoController,
     getAllCultivosControllers,
-    getCultivosByUserController
+    getCultivosByUserController,
+    updateCultivoController,
+    deleteCultivoController,
+    updateCultivoController
 }
