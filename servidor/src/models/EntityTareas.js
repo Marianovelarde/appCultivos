@@ -27,17 +27,16 @@ module.exports = (sequelize) => {
             defaultValue: 'pendiente',
         },
         caracter: {
-            type: DataTypes.ENUM('Urgente', 'Importante', 'Opcional', 'Seguimiento', 'Revisión', 'Otro'),
+            type: DataTypes.ENUM('Urgente', 'Importante', 'Opcional', 'Seguimiento', 'Revisión', 'Otro', 'Obligatoria'),
             defaultValue: 'Opcional'     
         },
         prioridad: {
             type: DataTypes.ENUM('baja', 'media', 'alta'),
             defaultValue: 'baja',},
-            idCultivo: {
-                type: DataTypes.INTEGER,
-            },
-            idCultivo: {
-                type: DataTypes.INTEGER,
-            }
+    
+        idCultivo: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        }
     }, {timestamps: true});
 }

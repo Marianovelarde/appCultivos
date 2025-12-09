@@ -3,7 +3,7 @@ const { createUserControllers, getAllUsersControllers, getUserByIdControllers, l
 
 const router = express.Router();
 
-router.post('/', createUserControllers)
+router.post('/create', createUserControllers)
 router.post('/login', loginControllers);
 router.get('/', getAllUsersControllers)
 router.get('/:idUser', getUserByIdControllers);

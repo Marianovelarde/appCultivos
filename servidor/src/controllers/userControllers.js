@@ -1,31 +1,42 @@
 const {
-    createUserService,
-    getAllUsersRepositoryService,
-    getUserByIdService,
-    loginService
+  createUserService,
+  getAllUsersRepositoryService,
+  getUserByIdService,
+  loginService
 } = require('../services/userService');
 
+const generateToken = require('../utils/generateToken');
+
+
+// ✅ CREAR USUARIO (contraseña ya va encriptada desde el service)
 const createUserControllers = async (req, res) => {
-    const {usuario, contraseña} = req.body; 
+  const { usuario, contraseña } = req.body;
 
+  if (!usuario || !contraseña) {
+    return res.status(400).json({ message: "Usuario y contraseña son requeridos" });
+  }
 
-    try {       
-         const newUser =  await createUserService(usuario, contraseña);
-      res.status(201).json({
+  try {
+    const newUser = await createUserService(usuario, contraseña);
+
+    res.status(201).json({
       mensaje: 'Usuario creado correctamente',
-      id: newUser.idUser,  // o newUser.id si ese es el campo real
-      usuario: usuario
+      id: newUser.idUser,
+      usuario: newUser.usuario
     });
 
-    } catch (error) {
-        res.status(500).json({error: error.message});
-    }  
-}
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ✅ OBTENER TODOS LOS USUARIOS
 const getAllUsersControllers = async (req, res) => {
   try {
-    const users = await getAllUsersRepositoryService();  
+    const users = await getAllUsersRepositoryService();
 
-    if (!users) {
+    if (!users || users.length === 0) {
       return res.status(404).json({ message: 'No se encontraron usuarios' });
     }
 
@@ -40,49 +51,69 @@ const getAllUsersControllers = async (req, res) => {
   }
 };
 
-const getUserByIdControllers = async (req,res) => {
-    const {idUser} = req.params;
-    //params: objeto de express que contiene los parámetros de la ruta solicitud HTTP
-    console.log('id en controllers:', idUser);
-    
 
-    try {
-      const user = await getUserByIdService(idUser);
+// ✅ OBTENER USUARIO POR ID
+const getUserByIdControllers = async (req, res) => {
+  const { idUser } = req.params;
 
-      if(!idUser){
-        return res.status(400).json({message: 'El id del usuario es requerido'});
-      }
-      return res.status(200).json({
-        message: 'Usuario obtenido correctamente',
-        usuario: user
-      });
-    } catch (error) {
-      return res.status(500).json({error: error.message});
-    }
-}
-
-const loginControllers = async (req, res) => {
-    const {usuario, contraseña} = req.body;
-    console.log(usuario, contraseña);
-    
-    if(!usuario || !contraseña) 
-      return res.status(400).json({message: 'Usuario y contraseña son requeridos'});
-    if (contraseña !== contraseña)
-      return res.status(401).json({ message: "Contraseña incorrecta" });
-    try {
-      const user = await loginService(usuario, contraseña);
-        return res.status(200).json({
-            message: 'Inicio de sesión exitoso',
-            usuario: user
-        });
-    } catch (error) {
-        return res.status(401).json({error: error.message});
-    }
+  if (!idUser) {
+    return res.status(400).json({ message: 'El id del usuario es requerido' });
   }
 
+  try {
+    const user = await getUserByIdService(idUser);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.status(200).json({
+      message: 'Usuario obtenido correctamente',
+      usuario: user
+    });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ✅ LOGIN SEGURO CON JWT
+const loginControllers = async (req, res) => {
+  const { usuario, contraseña } = req.body;
+
+  if (!usuario || !contraseña) {
+    return res.status(400).json({ message: "Usuario y contraseña son requeridos" });
+  }
+
+  try {
+    const user = await loginService(usuario, contraseña);
+
+    if (!user) {
+      return res.status(401).json({ message: "Credenciales inválidas" });
+    }
+
+    // ✅ Generar token
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      message: 'Inicio de sesión exitoso',
+      usuario: {
+        idUser: user.idUser,
+        usuario: user.usuario
+      },
+      token
+    });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
-    createUserControllers,
-    getAllUsersControllers,
-    getUserByIdControllers,
-    loginControllers
-}
+  createUserControllers,
+  getAllUsersControllers,
+  getUserByIdControllers,
+  loginControllers
+};

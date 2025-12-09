@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const router = require('../src/router/index');
+require("dotenv").config();
 
 const app = express();
 
