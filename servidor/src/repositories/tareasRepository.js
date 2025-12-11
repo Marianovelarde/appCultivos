@@ -88,6 +88,5 @@ const getTareasFiltradasRepository = async (idCultivo, filtros) => {
     deleteTareasRepository,
     completeTareaRepository,
     getTareasFiltradasRepository
-   
     
     }
